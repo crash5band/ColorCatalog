@@ -34,9 +34,20 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <ListBox Name="ColorsList" Grid.Row="1" ItemsSource="{Binding Colors}">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListBoxItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                        <ContentPresenter/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel/>
+                            <WrapPanel HorizontalAlignment="Center"/>
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                 </ListBox>
@@ -49,9 +60,9 @@
                                 <Setter Property="Margin" Value="0 2"/>
                             </Style>
                         </StackPanel.Resources>
-                        <hc:ColorPicker MaxHeight="300" SelectedBrush="{Binding ColorPick, Mode=OneWayToSource}"/>
+                        <hc:ColorPicker MaxHeight="290" SelectedBrush="{Binding ColorPick, Mode=OneWayToSource}"/>
 
-                        <Button Content="Add Color" HorizontalAlignment="Stretch" Style="{StaticResource ButtonPrimary}"
+                        <Button Margin="0 5 0 0" Content="Add Color" HorizontalAlignment="Stretch" Style="{StaticResource ButtonPrimary}"
                         Command="{Binding AddColorCmd}"/>
                         
                         <Button Margin="0 5 0 0" Content="Remove Color" HorizontalAlignment="Stretch" Command="{Binding RemoveColorCmd}"
@@ -66,9 +77,16 @@
                             
                             <TextBlock FontSize="14" Grid.Column="0" Text="Color Information" VerticalAlignment="Center"/>
                             <Border Grid.Column="1" Margin="5 0" Background="{Binding ElementName=ColorsList, Path=SelectedItem.Data, Converter={StaticResource Color2Brush}}"
-                                    Width="15" Height="15" CornerRadius="3" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}"/>
+                                    Width="15" Height="15" CornerRadius="3" BorderThickness="1" BorderBrush="{DynamicResource BorderBrush}">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="3" ShadowDepth="0.5" Direction="-45" Color="#333" Opacity="0.2"/>
+                                </Border.Effect>
+                            </Border>
                         </Grid>
-                        
+
+                        <TextBlock>Name</TextBlock>
+                        <controls:CopyableTextBlock Text="{Binding ElementName=ColorsList, Path=SelectedItem.Name}"/>
+
                         <TextBlock>RGB</TextBlock>
                         <controls:CopyableTextBlock Text="{Binding ElementName=ColorsList, Path=SelectedItem.RGB}"/>
 
@@ -77,7 +95,6 @@
 
                         <TextBlock>Hex</TextBlock>
                         <controls:CopyableTextBlock Text="{Binding ElementName=ColorsList, Path=SelectedItem.Hex}"/>
-                        
                     </StackPanel>
                 </ScrollViewer>
             </Grid>

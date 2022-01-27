@@ -15,15 +15,21 @@ namespace ColorCatalog.ViewModels
         public byte B => Data.B;
         public byte A => Data.A;
 
+        public string Name
+        {
+            get { return Data.Name; }
+            set { Data.Name = value; }
+        }
+
         public string RGB => $"{R}, {G}, {B}";
 
         public string Float => $"{R / 255.0f:0.00}, {G / 255.0f:0.00}, {B / 255.0f:0.00}";
 
         public string Hex => $"#{R:X2}{G:X2}{B:X2}";
 
-        public ColorViewModel(byte r, byte g, byte b, byte a = 255)
+        public ColorViewModel(string name, byte r, byte g, byte b, byte a = 255)
         {
-            Data = new Color(r, g, b, a);
+            Data = new Color(name, r, g, b, a);
         }
 
         public ColorViewModel()

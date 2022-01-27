@@ -18,6 +18,17 @@ namespace ColorCatalog.Models
         public byte B => b;
         public byte A => a;
 
+        public string Name { get; set; }
+
+        public Color(string name, byte _r, byte _g, byte _b, byte _a)
+        {
+            Name = name;
+            r = _r;
+            g = _g;
+            b = _b;
+            a = _a;
+        }
+
         public Color(byte _r, byte _g, byte _b, byte _a)
         {
             r = _r;

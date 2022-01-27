@@ -5,17 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ColorCatalog.Controls"
              xmlns:vm="clr-namespace:ColorCatalog.ViewModels"
-             xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:convert="clr-namespace:ColorCatalog.Converters"
              d:DataContext="{d:DesignInstance vm:ColorViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="225" d:DesignWidth="200"
-             Margin="2">
+             d:DesignHeight="175" d:DesignWidth="125"
+             Margin="5">
     <UserControl.Resources>
         <convert:ColorToBrushConverter x:Key="Color2Brush"/>
     </UserControl.Resources>
     
-    <Border Background="{DynamicResource RegionBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1.5" CornerRadius="5">
+    <Border Background="{DynamicResource RegionBrush}" Width="110" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="5">
         <Border.Effect>
             <DropShadowEffect BlurRadius="6" ShadowDepth="2" Direction="-45" Color="#333" Opacity="0.3"/>
         </Border.Effect>
@@ -27,18 +26,20 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" CornerRadius="5" Width="auto" Height="90" Margin="5"
+            <Border Grid.Row="0" CornerRadius="5" Width="auto" Height="75" Margin="5"
                     Background="{Binding Data, Converter={StaticResource Color2Brush}}"/>
 
             <StackPanel Grid.Row="1">
-                <local:CopyableTextBlock Text="{Binding RGB, FallbackValue=RGB}"/>
-                <local:CopyableTextBlock Text="{Binding Float, FallbackValue=Float}"/>
+                <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Margin="3 0" Style="{StaticResource TextBox.Small}"
+                         HorizontalContentAlignment="Center"/>
+                <!--<local:CopyableTextBlock Text="{Binding RGB, FallbackValue=RGB}"/>
+                <local:CopyableTextBlock Text="{Binding Float, FallbackValue=Float}"/>-->
                 <local:CopyableTextBlock Text="{Binding Hex, FallbackValue=Hex}"/>
             </StackPanel>
 
-            <Button Grid.Row="2" HorizontalAlignment="Stretch" Margin="2 5" Content="Remove"
+            <Button Grid.Row="2" HorizontalAlignment="Stretch" Margin="3 5" Content="Remove"
                     Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.RemoveColorCmd}"
-                    CommandParameter="{Binding}"/>
+                    CommandParameter="{Binding}" Style="{StaticResource ButtonDefault.Small}"/>
         </Grid>
     </Border>
 </UserControl>

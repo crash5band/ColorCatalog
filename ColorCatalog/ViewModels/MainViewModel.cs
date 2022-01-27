@@ -31,11 +31,22 @@ namespace ColorCatalog.ViewModels
                 if (line == null)
                     continue;
 
-                byte.TryParse(line.AsSpan(1, 2), NumberStyles.HexNumber, null, out byte r);
-                byte.TryParse(line.AsSpan(3, 2), NumberStyles.HexNumber, null, out byte g);
-                byte.TryParse(line.AsSpan(5, 2), NumberStyles.HexNumber, null, out byte b);
+                string[] split = line.Split(',', StringSplitOptions.TrimEntries);
+                string name = "";
+                int hexIndex = 0;
 
-                Colors.Add(new ColorViewModel(r, g, b));
+                // color was saved with a name
+                if (split.Length >= 2)
+                {
+                    name = split[0];
+                    hexIndex = 1;
+                }
+
+                byte.TryParse(split[hexIndex].AsSpan(1, 2), NumberStyles.HexNumber, null, out byte r);
+                byte.TryParse(split[hexIndex].AsSpan(3, 2), NumberStyles.HexNumber, null, out byte g);
+                byte.TryParse(split[hexIndex].AsSpan(5, 2), NumberStyles.HexNumber, null, out byte b);
+
+                Colors.Add(new ColorViewModel(name, r, g, b));
             }
         }
 
@@ -43,7 +54,7 @@ namespace ColorCatalog.ViewModels
         {
             using var writer = new StreamWriter(ColorsDB);
             foreach (ColorViewModel color in Colors)
-                writer.WriteLine(color.Hex);
+                writer.WriteLine(color.Name.Length > 0 ? $"{color.Name}, {color.Hex}" : color.Hex);
         }
 
         public RelayCommand AddColorCmd { get; set; }
@@ -51,7 +62,7 @@ namespace ColorCatalog.ViewModels
 
         public void AddSelectedColor()
         {
-            Colors.Add(new ColorViewModel(ColorPick.Color.R, ColorPick.Color.G, ColorPick.Color.B));
+            Colors.Add(new ColorViewModel("", ColorPick.Color.R, ColorPick.Color.G, ColorPick.Color.B));
         }
 
         public void RemoveColor(object color)
