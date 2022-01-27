@@ -28,5 +28,11 @@ namespace ColorCatalog
             InitializeComponent();
             DataContext = new MainViewModel();
         }
+
+        private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (DataContext is MainViewModel vm)
+                vm.SaveColors();
+        }
     }
 }

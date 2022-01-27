@@ -15,42 +15,35 @@ namespace ColorCatalog.ViewModels
     internal class MainViewModel : ViewModelBase
     {
         public ObservableCollection<ColorViewModel> Colors { get; set; }
-
         public System.Windows.Media.SolidColorBrush ColorPick { get; set; }
+
+        public readonly string ColorsDB = "colors.txt";
 
         public void LoadColors()
         {
-            if (!File.Exists("colors.txt"))
+            if (!File.Exists(ColorsDB))
                 return;
 
-            StreamReader reader = new StreamReader("colors.txt");
+            using var reader = new StreamReader(ColorsDB);
             while (!reader.EndOfStream)
             {
-                string line = reader.ReadLine();
-                string rCode = line.Substring(1, 2);
-                string gCode = line.Substring(3, 2);
-                string bCode = line.Substring(5, 2);
-                int r = 0;
-                int g = 0;
-                int b = 0;
+                string? line = reader.ReadLine();
+                if (line == null)
+                    continue;
 
-                int.TryParse(rCode, NumberStyles.HexNumber, null, out r);
-                int.TryParse(gCode, NumberStyles.HexNumber, null, out g);
-                int.TryParse(bCode, NumberStyles.HexNumber, null, out b);
-                Colors.Add(new ColorViewModel((byte)r, (byte)g, (byte)b));
+                byte.TryParse(line.AsSpan(1, 2), NumberStyles.HexNumber, null, out byte r);
+                byte.TryParse(line.AsSpan(3, 2), NumberStyles.HexNumber, null, out byte g);
+                byte.TryParse(line.AsSpan(5, 2), NumberStyles.HexNumber, null, out byte b);
+
+                Colors.Add(new ColorViewModel(r, g, b));
             }
         }
 
         public void SaveColors()
         {
-            StreamWriter writer = new StreamWriter("colors.txt");
+            using var writer = new StreamWriter(ColorsDB);
             foreach (ColorViewModel color in Colors)
-            {
                 writer.WriteLine(color.Hex);
-            }
-
-            writer.Flush();
-            writer.Close();
         }
 
         public RelayCommand AddColorCmd { get; set; }
@@ -76,6 +69,8 @@ namespace ColorCatalog.ViewModels
 
             AddColorCmd = new RelayCommand(AddSelectedColor, null);
             RemoveColorCmd = new RelayCommand<ColorViewModel>(RemoveColor, null);
+
+            ColorPick = new System.Windows.Media.SolidColorBrush();
         }
     }
 }
